@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  client:
+    build: ./client
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on:
+      - api
+    container_name: client
+  api:
+    build: ./api
+    ports:
+      - '5000:5000'
+    volumes:
+      - logs:/app/logs
+      - ./api:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    env_file:
+      - ./api/.env
+    container_name: api
+  mongo:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    ports:
+      - '27017:27017'
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "tonsak2"
+      MONGO_INITDB_ROOT_PASSWORD: "1234"
+      MONGO_INITDB_DATABASE: "Numerical"
+
+volumes:
+  data:
+  logs:
