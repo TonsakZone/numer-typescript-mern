@@ -10,10 +10,13 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./swagger_output.json')
+const bisectionFile = require('./bisections.json');
+const onepointFile = require('./onepoints.json');
+const linearFile = require('./linearregressions.json');
 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@host.docker.internal:${process.env.DB_PORT}/Numerical`;
+const uri = `mongodb+srv://tonsak2:1234@cluster0.oig7p.mongodb.net/Numerical`;
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -115,6 +118,12 @@ app.post('/ExOnepoint', async (req, res) => {
   });
   Onepoint = mongoose.models.onepoints || mongoose.model('onepoints', OnepointSchema);
   console.log(`Using collection: ${Onepoint.collection.name}`);
+  // let insetOnepoint = await Onepoint.insert(
+  //   {
+  //     "Equation": fx,
+  //     "X": 0
+  //   }
+  // )
   try {
       let onepointExample = await Onepoint.find({ Equation : fx });
       console.log(onepointExample[0]);

@@ -1,0 +1,30 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+
+test:
+  stage: test
+  script:
+    - npm test
+
+deploy:
+  stage: deploy
+  script:
+    - npm install -g pm2
+    - pm2 deploy ecosystem.config.js production
+  environment:
+    name: production
+    url: https://example.com
